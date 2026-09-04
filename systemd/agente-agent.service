@@ -1,0 +1,20 @@
+[Unit]
+Description={{AGENTE_NAME}} Claude Agent (tmux session)
+After=network.target postgresql.service
+
+[Service]
+# oneshot + RemainAfterExit: "tmux new-session -d" daemoniza sozinho e o
+# comando cliente retorna na hora. Type=forking NAO funciona aqui (systemd
+# perde o rastro do processo e fica reiniciando em loop). A supervisao
+# continua fica por conta do healthcheck.sh via cron (checa se a sessao tmux
+# existe e reinicia esse service se nao existir).
+Type=oneshot
+RemainAfterExit=yes
+User={{AGENTE_NAME_LOWERCASE}}
+WorkingDirectory=/opt/{{AGENTE_NAME_LOWERCASE}}
+EnvironmentFile=/root/.agente-secrets.env
+ExecStart=/usr/local/bin/start-agente.sh
+ExecStop=/usr/bin/tmux kill-session -t {{AGENTE_NAME_LOWERCASE}}
+
+[Install]
+WantedBy=multi-user.target

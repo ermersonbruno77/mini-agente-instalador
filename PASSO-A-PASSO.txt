@@ -1,0 +1,14 @@
+========================================
+COMO CRIAR UM AGENTE CLAUDE CODE + TELEGRAM
+========================================
+
+Este arquivo era uma segunda copia do passo a passo e ficou desatualizado. Em vez de manter
+duas fontes de verdade divergindo, siga direto:
+
+- README.md - visao geral, o que este fork entrega, instalacao rapida
+- SETUP-AGENTE.md - passo a passo tecnico completo (ETAPA 0 a ETAPA 9)
+- prompt-instalador.txt - prompt pronto pra colar no Claude Code se quiser que ele
+  conduza a instalacao perguntando o que precisa
+
+Repositorio: https://github.com/ermersonbruno77/mini-agente-instalador
+Issues: https://github.com/ermersonbruno77/mini-agente-instalador/issues

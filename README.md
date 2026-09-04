@@ -1,0 +1,185 @@
+# Agente Claude Code + Telegram - Setup Automatizado (v3 - VERSAO PUBLICA PRA ALUNOS)
+
+---
+
+## Sobre este fork: time pronto, nome livre
+
+Este repositório parte do setup público acima e já vem com um time de 4 subagentes (fixo)
+pré-configurados e um `CLAUDE.md` mais maduro (protocolo de boot, sistema de promessas, fila de
+aprendizado, portão de governança antes de deploy, checklist de pedido com vários itens). Nasceu
+como clone sanitizado de uma instalação real, com todo dado sensível removido: nada de folha de
+pagamento, nada de dado de terceiro, nada de informação pessoal.
+
+O time vem com: `paulo-dev`, `juliana-ops`, `jonathan-copy`, `rafael-projetos`.
+
+`CLAUDE.md` e os 4 agentes usam `{{AGENTE_NAME}}`/`{{AGENTE_NAME_LOWERCASE}}` (nome do agente) e
+`{{DONO}}` (nome do admin/Chefe) como placeholder, iguais aos do resto do repo. Responda essas duas
+perguntas na ETAPA 0 do `SETUP-AGENTE.md` com o nome que quiser (ex: TMB) e os caminhos
+(`/opt/<nome>-bot/`, etc.) já saem certos. Veja a nota de "caminho curto" na ETAPA 0: pra este
+fork, só 5 perguntas são realmente obrigatórias (nome do agente, nome do admin, VPS, token e ID do
+Telegram).
+
+---
+
+## INSTALACAO 5 MIN - Sem mexer em terminal (caminho recomendado)
+
+> **Voce nao precisa saber comando nenhum.** O Claude Code do seu PC faz SSH na sua VPS automaticamente, instala tudo, configura, sobe o agente. Voce so responde perguntas.
+
+**6 passos:**
+
+1. Compre uma VPS Ubuntu 22.04+ (Hostinger, Hetzner, DigitalOcean - 4GB RAM, ~R$30-60/mes)
+2. Anote IP, usuario (`root`) e senha que o provedor te mandou
+3. Abra o Claude Code no seu computador ([claude.com/code](https://claude.com/code) ou extensao VS Code)
+4. Cole o prompt magico que esta em [`prompt-instalador.txt`](./prompt-instalador.txt)
+5. Responda as perguntas do Claude (uma por vez, calmamente)
+6. Quando ele falar "agente no ar", abra o Telegram e converse com seu bot
+
+**Guia detalhado passo a passo:** [`INSTRUCAO-PARA-ALUNO.md`](./INSTRUCAO-PARA-ALUNO.md)
+
+---
+
+## Caminho avancado (manual, pra quem ja sabe terminal)
+
+Se voce e desenvolvedor e prefere SSH na VPS e rodar os comandos voce mesmo, siga as secoes abaixo. O fluxo termina no mesmo agente, so e mais "hands on".
+
+> **VERSAO PUBLICA - ALUNOS DO {{DONO}}**
+> Esse repo e a versao publica/sanitizada do setup interno do {{DONO}}. Todos os dados pessoais do dono original viraram placeholders no formato `{{NOME}}`. Voce, aluno, vai preencher com os SEUS proprios dados (nome, dominios, IPs, tokens, bot Telegram, etc).
+>
+> Nao tente rodar nada sem antes substituir os placeholders. Veja a tabela em `SETUP-AGENTE.md` (ETAPA 0) com cada `{{NOME}}` e onde pegar/o que e.
+
+Instala um agente Claude Code conectado ao Telegram em qualquer VPS Ubuntu 22+ ou macOS. Roda 24/7 via tmux + systemd (Linux) ou tmux + launchd (Mac), sobrevive reboots e auto-reinicia se cair.
+
+**Este fork** entrega, além da base pública acima:
+- 4 subagentes especializados (ver lista completa na seção "Sobre este fork" acima)
+- Audio bidirecional (faster-whisper local na entrada + ElevenLabs/Gemini na saida)
+- Memoria vetorial PostgreSQL + pgvector (embeddings 384-dim, sem OpenAI)
+- Sem agent-manager.py/PM2/Caddy/Cloudflare tunnel nem "Clone SDR" - isso era de uma versao
+  generica anterior e nao faz parte do que este repo entrega
+
+## Uso
+
+### 1. Na VPS limpa (Ubuntu 22.04+) ou no Mac:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/ermersonbruno77/mini-agente-instalador/main/bootstrap.sh | bash
+```
+
+Linux: roda como `root`. Mac: roda como usuario normal (sem sudo na chamada). O script detecta o SO e instala o que precisa.
+
+Instala: Node 22 (via nvm), Python 3, ffmpeg, Claude Code CLI 2.1.118 (pinado), tmux, PostgreSQL 16 + pgvector, Caddy, pm2 globalmente. Baixa o `SETUP-AGENTE.md` pra `/root/` (Linux) ou `~/` (Mac).
+
+### 2. Logar na conta Claude:
+
+```bash
+claude auth login --claudeai
+```
+
+Abre link no navegador, loga com Pro/Max, autoriza.
+
+### 3. Iniciar o Claude e deixar ele fazer o resto:
+
+```bash
+cd /root        # ou cd ~ no Mac
+claude --dangerously-skip-permissions
+```
+
+### 4. Dentro do Claude, cola:
+
+```
+Leia o arquivo SETUP-AGENTE.md e execute todos os passos.
+Me faca perguntas quando precisar de informacao minha.
+```
+
+O Claude pergunta nome do agente, dono, tokens, configura tudo e entrega o agente rodando.
+
+## Arquitetura deste fork
+
+```
+[Telegram]  <==>  [Bot Python systemd 24/7]  <==>  tmux send-keys + outbox JSON
+                            |                              |
+                            v                              v
+                   [audio Whisper / TTS]          [Claude Code (tmux)]
+                                                          |
+                                  +---------+---------+---+---+
+                                  v         v         v       v
+                              paulo-dev juliana-ops jonathan rafael   (fixo, sem 5o agente)
+```
+
+Camadas de resiliencia:
+- Bot Python systemd `Restart=always`
+- Claude Code tmux + `start-agente.sh` (mata e recria a sessao se precisar)
+- Healthcheck a cada 2 min via cron, com auto-alerta e auto-restart
+- Restart diario do agente (crontab-referencia.txt) pra limpar contexto acumulado
+
+## Recursos deste fork
+
+- Bot externo Python sempre vivo (independente do Claude Code)
+- Audio entrada (faster-whisper local PT-BR) e saida (ElevenLabs/Gemini TTS) bidirecional
+- "Digitando..." automatico durante todo processamento
+- 4 subagentes especializados (ver lista na seção "Sobre este fork")
+- Memoria vetorial PostgreSQL + pgvector (HNSW index, embeddings 384-dim locais)
+- Healthcheck a cada 2 min com auto-alerta e auto-restart
+- Sistema de promessas/lembretes e fila de aprendizado (ver `CLAUDE.md`)
+
+## Requisitos
+
+- VPS Ubuntu 22.04+ (4 GB RAM minimo, 8 GB recomendado, 50 GB disco) **ou** macOS 13+
+- Conta Claude Pro ou Max
+- Conta Telegram (pra @BotFather)
+- (Opcional) OpenAI API key (audio entrada via Whisper)
+- (Opcional) ElevenLabs API key (audio saida via TTS)
+- (Opcional, deploy publico) GitHub PAT + Vercel token + Cloudflare DNS token
+
+## Custo mensal por agente (estimado)
+
+- VPS 4-8 GB: R$40-120 (Hostinger, Hetzner, DigitalOcean)
+- Claude Max: US$100 (Pro tambem serve)
+- OpenAI Whisper: ~$0.006/min de audio (irrelevante)
+- ElevenLabs: free tier 10k chars/mes serve, basic $5/mes
+- Telegram: gratis
+- PostgreSQL: gratis (local)
+
+Total por agente: ~R$600-700/mes.
+
+## Migracao da v2 para v3
+
+Se ja tem agente v2 rodando, pra adicionar features v3:
+1. Atualiza Claude Code: `npm i -g @anthropic-ai/claude-code@2.1.118`
+2. Instala PM2: `npm i -g pm2`
+3. Cria `agent-manager.py` em `/opt/AGENTE/agent-manager/`
+4. Configura Caddy proxy + Cloudflare tunnel
+5. Reinicia tudo: `systemctl restart AGENTE AGENTE-bot && pm2 restart agent-manager`
+
+## Issues / Suporte
+
+https://github.com/ermersonbruno77/mini-agente-instalador/issues
+
+## Como personalizar (placeholders)
+
+Antes de rodar o setup, voce precisa preencher os placeholders no formato `{{NOME}}` que estao espalhados pelos arquivos. Tabela completa em `SETUP-AGENTE.md` (ETAPA 0).
+
+Resumo dos principais:
+
+| Placeholder | O que e | Onde voce acha |
+|---|---|---|
+| `{{DONO}}` | Seu primeiro nome (ou da empresa) | Voce decide |
+| `{{DONO_NOME_COMPLETO}}` | Nome completo do dono do agente | Voce decide |
+| `{{DONO_SLUG}}` | Versao "slug" do nome (lowercase, sem espacos) | Ex: `joao` se voce e Joao |
+| `{{EMAIL_DONO}}` | Seu email | Seu email pessoal/profissional |
+| `{{NICHO_DONO}}` | Nome da empresa/produto/marca | Voce decide |
+| `{{NICHO_DONO_SLUG}}` | Slug da empresa | Ex: `meunicho` |
+| `{{TELEGRAM_USER_ID_DONO}}` | Seu ID numerico no Telegram | Mande `/id` pra @userinfobot |
+| `{{TELEGRAM_BOT_USERNAME}}` | Username do bot que voce criou no @BotFather | Ex: `meuagente_bot` |
+| `{{INSTAGRAM_HANDLE_DONO}}` | Seu @ no Instagram (sem o @) | Ex: `joao.silva` |
+| `{{VPS_IP}}` | IP da VPS principal onde roda o agente | Hostinger/Hetzner/DigitalOcean |
+| `{{VPS_IP_ALT}}` / `{{VPS_IP_ALT_2}}` / `{{VPS_IP_ALT_3}}` | IPs de VPS adicionais (se tiver) | Painel da sua provedora |
+| `{{DOMINIO_PRINCIPAL}}` | Seu dominio raiz | Ex: `meusite.com` |
+| `{{DOMINIO_AI}}` | Dominio secundario (opcional) | Ex: `meusite.ai` |
+| `{{DOMINIO_CRM}}` | Dominio do CRM (se tiver) | Ex: `crm.meusite.com` |
+| `{{DOMINIO_CLIENTE_EXEMPLO}}` | Subdominio exemplo de cliente | Ex: `cliente1.meusite.com` |
+| `{{PRODUTO_DONO}}` | Nome do seu produto/SaaS principal | Voce decide |
+| `{{PRODUTO_DONO_SLUG}}` | Slug do produto | Ex: `meu-produto` |
+| `{{MENTORIA_DONO}}` / `{{FORMACAO_DONO}}` / `{{COMUNIDADE_DONO}}` | Nomes dos seus produtos educacionais | Voce decide |
+| `{{SENHA_PADRAO}}` | Senha admin que voce vai usar (TROCA depois!) | Voce define |
+| `{{GITHUB_USERNAME}}` | Seu username no GitHub | Conta sua |
+| `{{DONO_UPPER}}` / `{{NICHO_DONO_UPPER}}` | Versoes em CAIXA ALTA | Use os mesmos valores ja definidos, em uppercase |

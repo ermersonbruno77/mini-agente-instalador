@@ -1,0 +1,19 @@
+[Unit]
+Description={{AGENTE_NAME}} Memory API (pgvector search, porta 3007)
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User={{AGENTE_NAME_LOWERCASE}}
+WorkingDirectory=/opt/{{AGENTE_NAME_LOWERCASE}}-bot
+# PG_PASSWORD vem de /opt/{{AGENTE_NAME_LOWERCASE}}-bot/.env (memory_api.py le
+# esse arquivo direto no codigo, mesmo padrao do bot.py). Nao precisa de
+# EnvironmentFile aqui porque esse service ja roda como o usuario do agente,
+# que e dono desse .env (diferente de /root/.agente-secrets.env, ilegivel
+# pra ele).
+ExecStart=/usr/bin/python3 -m uvicorn memory_api:app --host 127.0.0.1 --port 3007
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

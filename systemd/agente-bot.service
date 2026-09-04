@@ -1,0 +1,15 @@
+[Unit]
+Description={{AGENTE_NAME}} Telegram Bot (external daemon)
+After=network.target
+
+[Service]
+Type=simple
+User={{AGENTE_NAME_LOWERCASE}}
+WorkingDirectory=/opt/{{AGENTE_NAME_LOWERCASE}}-bot
+ExecStart=/usr/bin/python3 /opt/{{AGENTE_NAME_LOWERCASE}}-bot/bot.py
+Restart=always
+RestartSec=5
+EnvironmentFile=/opt/{{AGENTE_NAME_LOWERCASE}}-bot/.env
+
+[Install]
+WantedBy=multi-user.target

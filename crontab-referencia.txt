@@ -1,0 +1,54 @@
+# Crontab de referência — instala com `sudo crontab -e` (crontab do ROOT, não
+# do usuário do agente). Isso é obrigatório, não opcional: a linha de restart
+# do agente precisa de systemctl (só root pode reiniciar um service), e os
+# scripts abaixo leem a senha do Postgres em /root/.agente-secrets.env (só
+# root tem permissão de leitura nesse arquivo).
+# Troque {{AGENTE_NAME_LOWERCASE}} pelo nome real definido na ETAPA 0.
+# Todos os horários abaixo são em UTC (hora do servidor). Converta pra Brasília
+# (UTC-3) antes de decidir horário de briefing/relatório.
+
+# Consolida a conversa do Telegram no banco a cada 5 min (histórico pro boot ler)
+*/5 * * * * /usr/bin/python3 /opt/{{AGENTE_NAME_LOWERCASE}}-bot/consolidate-conversations.py >> /opt/{{AGENTE_NAME_LOWERCASE}}-bot/logs/consolidate.log 2>&1
+
+# Healthcheck do bot externo
+*/2 * * * * /opt/{{AGENTE_NAME_LOWERCASE}}-bot/healthcheck.sh >/dev/null 2>&1
+
+# Dispara lembrete agendado que já venceu
+* * * * * /usr/bin/python3 /opt/{{AGENTE_NAME_LOWERCASE}}/tools/lembretes_check.py >/dev/null 2>&1
+
+# Cobra promessa vencida (sweep) e reescreve memory/promessas.md
+10 * * * * /usr/bin/python3 /opt/{{AGENTE_NAME_LOWERCASE}}/tools/promessas.py sweep >> /opt/{{AGENTE_NAME_LOWERCASE}}-bot/logs/promessas.log 2>&1
+
+# Consolida a fila de aprendizado (resume pro Chefe, so se tiver licao pendente - este fork
+# nao tem arquivista pra gravar sozinho, agentes sao read-only) — 19h de Brasília
+0 22 * * * /opt/{{AGENTE_NAME_LOWERCASE}}/tools/aprendizado.sh >> /opt/{{AGENTE_NAME_LOWERCASE}}-bot/logs/aprendizado.log 2>&1
+
+# Detector de minerador/invasão na VPS
+*/5 * * * * /opt/{{AGENTE_NAME_LOWERCASE}}/tools/anti_miner.sh >/dev/null 2>&1
+
+# Reinicia a sessão do agente 1x por dia (limpa qualquer trava acumulada) — 5h UTC
+0 5 * * * /usr/bin/systemctl restart {{AGENTE_NAME_LOWERCASE}}-agent >/dev/null 2>&1
+
+# Backup criptografado diário — só se voce configurou tools/backup.sh (precisa
+# de repo git próprio pra receber os backups; ver comentário no topo do script)
+30 3 * * * /opt/{{AGENTE_NAME_LOWERCASE}}/tools/backup.sh >> /opt/{{AGENTE_NAME_LOWERCASE}}-bot/logs/backup.log 2>&1
+
+# (Opcional) segundo restart diário, 12h depois do primeiro — útil se o
+# contexto da sessão principal costuma saturar (99-100%) antes das 24h e isso
+# degradar a disciplina de delegação do agente. Ajuste o horário conforme
+# necessário; não é padrão, ative só se notar esse sintoma.
+# 0 17 * * * /usr/bin/systemctl restart {{AGENTE_NAME_LOWERCASE}}-agent >/dev/null 2>&1
+
+# Custo diário do time (tokens/chamadas por agente) — 1 linha por dia
+20 3 * * * /usr/bin/python3 /opt/{{AGENTE_NAME_LOWERCASE}}/tools/monitors/custo-diario.py >> /opt/{{AGENTE_NAME_LOWERCASE}}-bot/logs/custo-diario.log 2>&1
+
+# Vigia o tamanho das fichas de agente (ficha que só cresce vira custo fixo
+# invisível em toda invocação) — a cada 2 dias
+17 12 */2 * * /usr/bin/python3 /opt/{{AGENTE_NAME_LOWERCASE}}/tools/monitors/fichas_agentes.py >> /opt/{{AGENTE_NAME_LOWERCASE}}/logs/fichas-agentes.log 2>&1
+
+# Confere se o painel de agentes bate com quem está realmente trabalhando —
+# só avisa quando discorda, não inventa registro
+*/5 * * * * /usr/bin/python3 /opt/{{AGENTE_NAME_LOWERCASE}}/tools/monitors/painel-agentes-confere.py >> /opt/{{AGENTE_NAME_LOWERCASE}}/memory/estado/painel-agentes.log 2>&1
+
+# Saúde da memória vetorial (banco + embedding respondendo)
+30 10 * * * /opt/{{AGENTE_NAME_LOWERCASE}}/tools/monitors/saude-memoria.sh >/dev/null 2>&1
