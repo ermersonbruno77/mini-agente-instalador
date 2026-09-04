@@ -58,11 +58,13 @@ Copie o prompt abaixo e cole na conversa do Claude:
 Quero instalar meu agente autonomo Claude + Telegram numa VPS Ubuntu.
 
 Acessa o repositorio publico https://github.com/ermersonbruno77/mini-agente-instalador 
-e segue o passo a passo de SETUP-AGENTE.md.
+e segue o passo a passo de SETUP-AGENTE.md. Esse fork ja vem com CLAUDE.md e 4 subagentes
+fixos prontos em .claude/agents/ (Paulo, Jonathan, Rafael e Juliana - nao crie nenhum agente
+novo, o repo tem uma trava pra isso de proposito).
 
 Vou te dar as informacoes conforme voce pedir:
 - IP, usuario e senha da VPS
-- Nome do meu agente (ex: Bia, Paula, Lucas)
+- Nome do meu agente (ex: Nexus, Aria, Vega)
 - Meu nome
 - Token do bot Telegram (eu crio no @BotFather quando voce pedir)
 - Meu user_id Telegram (eu pego no @userinfobot quando voce pedir)
@@ -83,13 +85,13 @@ O Claude vai te perguntar:
 1. **IP da VPS** -> cole o IP que o provedor te deu
 2. **Usuario** -> geralmente `root`
 3. **Senha** -> a senha que o provedor te enviou
-4. **Nome do agente** -> escolha um nome (ex: `Bia`, `Paula`, `Lucas`, `Marcus`)
+4. **Nome do agente** -> escolha um nome (ex: `Nexus`, `Aria`, `Vega`)
 5. **Seu nome** -> seu nome real (vai aparecer nos logs)
 6. **Token do bot Telegram** -> nesse momento o Claude pode te guiar:
    - Abra o Telegram
    - Procure `@BotFather`
    - Mande `/newbot`
-   - Escolha um nome (ex: `Bia AI`) e username (ex: `bia_ai_bot`)
+   - Escolha um nome (ex: `Nexus AI`) e username (ex: `nexus_ai_bot`)
    - Copie o token que aparece (ex: `1234567890:AAH...`)
    - Cole no Claude
 7. **Seu user_id no Telegram** -> o Claude pode te guiar:
@@ -121,10 +123,10 @@ Quando ele falar **"agente no ar"**, abra o Telegram e mande um "oi" pro seu age
 
 ## Pronto. Como usar agora
 
-- **Conversar**: abra o chat do bot que voce criou (`@bia_ai_bot` por exemplo) e converse normalmente
+- **Conversar**: abra o chat do bot que voce criou (`@nexus_ai_bot` por exemplo) e converse normalmente
 - **Mandar audio**: o bot transcreve via Whisper (se voce configurou OpenAI) e responde
 - **Receber audio**: peca pro agente "responde em audio" se voce configurou ElevenLabs
-- **Tarefas longas**: peca coisas tipo "pesquisa X na internet", "cria um codigo Y", "agenda Z" — o agente delega pros subagentes especializados (Paulo, Juliana, Jonathan, Rafael, Davi)
+- **Tarefas longas**: peca coisas tipo "pesquisa X na internet", "cria um codigo Y", "agenda Z" — o agente delega pros 4 subagentes especializados (Paulo, Juliana, Jonathan, Rafael)
 
 ---
 
@@ -159,7 +161,7 @@ A autenticacao precisa de browser. O Claude vai te pedir pra **copiar uma URL** 
 Cheque: o token do `@BotFather` esta certo? O `user_id` do `@userinfobot` esta certo? Voce ja mandou `/start` pro bot na primeira vez?
 
 **Quero parar/reiniciar o agente:**
-Peca pro Claude do seu PC: "faz SSH na minha VPS e reinicia o servico do agente Bia". Ele faz.
+Peca pro Claude do seu PC: "faz SSH na minha VPS e reinicia o servico do agente Nexus". Ele faz.
 
 ---
 
