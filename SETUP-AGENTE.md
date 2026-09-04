@@ -184,9 +184,9 @@ Esse repo e a versao publica/sanitizada. Antes de qualquer ETAPA tecnica, voce, 
 
 | # | Placeholder | Pergunta pro aluno | Exemplo |
 |---|---|---|---|
-| 0 | `{{AGENTE_NAME}}` | "Qual o nome do agente, com capitalizacao normal? (ex: TMB, Nexus, Aria)" | `TMB` |
-| 0b | `{{AGENTE_NAME_LOWERCASE}}` | "Versao minuscula, sem espaco, pros caminhos e nomes de servico (default: minusculo do anterior)" | `tmb` |
-| 0c | `{{AGENTE_NAME_UPPER}}` | "Versao CAIXA ALTA, pra nome de variavel de ambiente (default: maiusculo do primeiro)" | `TMB` |
+| 0 | `{{AGENTE_NAME}}` | "Qual o nome do agente, com capitalizacao normal? (ex: Nexus, Aria, Vega)" | `Nexus` |
+| 0b | `{{AGENTE_NAME_LOWERCASE}}` | "Versao minuscula, sem espaco, pros caminhos e nomes de servico (default: minusculo do anterior)" | `nexus` |
+| 0c | `{{AGENTE_NAME_UPPER}}` | "Versao CAIXA ALTA, pra nome de variavel de ambiente (default: maiusculo do primeiro)" | `NEXUS` |
 | 1 | `{{DONO}}` | "Qual o primeiro nome (ou apelido) do admin/Chefe que vai aparecer no agente?" | `Joao` |
 | 2 | `{{DONO_NOME_COMPLETO}}` | "E o nome completo? (opcional, so usado fora deste fork)" | `Joao Silva` |
 | 3 | `{{DONO_SLUG}}` | "Versao 'slug' do seu nome (lowercase, sem espacos, sem acentos). Default: lowercase do anterior." | `joao` |
@@ -460,7 +460,7 @@ cp /opt/AGENTE/systemd/agente-memory.service /etc/systemd/system/AGENTE-memory.s
 systemctl daemon-reload
 ```
 (O nome do arquivo `/etc/systemd/system/AGENTE-agent.service` acima usa "AGENTE" como
-placeholder de nomenclatura pra voce trocar pelo nome real ao rodar - ex: `tmb-agent.service`
+placeholder de nomenclatura pra voce trocar pelo nome real ao rodar - ex: `nexus-agent.service`
 - diferente do conteudo interno do arquivo, que ja veio substituido.)
 
 Sobe o bot e o servico de memoria agora (o agente em si so na ETAPA 9, depois do login):

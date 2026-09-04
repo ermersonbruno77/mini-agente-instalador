@@ -9,7 +9,7 @@ Diferencas em relacao ao puxar.py do DFC, de proposito:
   - roda a mao, nao tem cron. Isto e uma exportacao pontual pra corrigir a base
     de um painel interno, nao um pipeline diario.
   - apaga o arquivo da caixa depois de baixar. O CSV tem nome e e-mail de todo
-    mundo da TMB, e a URL do Vercel Blob e publica (aleatoria, mas publica).
+    mundo da empresa, e a URL do Vercel Blob e publica (aleatoria, mas publica).
     Quanto menos tempo la, melhor. Use --manter pra nao apagar.
   - nao escreve NADA no Postgres. Cruzar com orc_pessoa e outra etapa, decidida
     pela {{AGENTE_NAME}} depois de conferir o arquivo.

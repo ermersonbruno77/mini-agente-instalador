@@ -116,7 +116,7 @@ def avisar_parecidas(cursor, texto, limite=0.34):
     """Avisa quando já existe promessa viva sobre o mesmo assunto.
 
     Criada em 11/08/2026 porque eu dupliquei duas vezes no mesmo dia. A #100 e a
-    #178 eram a mesma pergunta (o FAP real da TMB) com números DIFERENTES: a
+    #178 eram a mesma pergunta (um numero real do negocio) com números DIFERENTES: a
     velha ainda carregava uma estimativa que eu já tinha corrigido, então o
     Chefe seria cobrado duas vezes e uma das cobranças estava errada. Horas
     depois registrei a #229 e a #230 sem ver que a #193 já dizia as duas coisas.

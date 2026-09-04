@@ -6,7 +6,7 @@ contra a API da Conta Azul. O token deles e de administrador e nao separa
 leitura de escrita; a trava e nossa, no codigo.
 
 REGRA 2 (ordem direta do Chefe, 11/08/2026, repetida 18x): NAO PESAR O SISTEMA.
-O Conta Azul e o ERP em que o financeiro da TMB trabalha o dia todo. O teto
+O Conta Azul e o ERP em que o financeiro da empresa trabalha o dia todo. O teto
 deles e 600 req/min e 10 req/s, mas nos usamos NO MAXIMO 1 requisicao por
 segundo, com pausa explicita entre chamadas. Lentidao nossa nao custa nada;
 lentidao do lado deles custa o projeto inteiro. Se vier 429 (ou qualquer sinal

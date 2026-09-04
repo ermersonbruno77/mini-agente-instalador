@@ -14,7 +14,7 @@ O time vem com: `paulo-dev`, `juliana-ops`, `jonathan-copy`, `rafael-projetos`.
 
 `CLAUDE.md` e os 4 agentes usam `{{AGENTE_NAME}}`/`{{AGENTE_NAME_LOWERCASE}}` (nome do agente) e
 `{{DONO}}` (nome do admin/Chefe) como placeholder, iguais aos do resto do repo. Responda essas duas
-perguntas na ETAPA 0 do `SETUP-AGENTE.md` com o nome que quiser (ex: TMB) e os caminhos
+perguntas na ETAPA 0 do `SETUP-AGENTE.md` com o nome que quiser (ex: Nexus) e os caminhos
 (`/opt/<nome>-bot/`, etc.) já saem certos. Veja a nota de "caminho curto" na ETAPA 0: pra este
 fork, só 5 perguntas são realmente obrigatórias (nome do agente, nome do admin, VPS, token e ID do
 Telegram).

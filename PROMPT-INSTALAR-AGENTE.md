@@ -9,7 +9,7 @@ SETUP-AGENTE.md, complementa.
 
 ## Colete isso do usuário primeiro, uma pergunta por vez, espere a resposta
 
-1. Nome do agente (capitalização normal, ex: TMB, Nexus, Aria) → `{{AGENTE_NAME}}`
+1. Nome do agente (capitalização normal, ex: Nexus, Aria, Vega) → `{{AGENTE_NAME}}`
 2. Primeiro nome/apelido do dono → `{{DONO}}`
 3. IP, usuário e senha (ou chave) da VPS Ubuntu 22+
 4. Token do bot Telegram (ele cria em @BotFather com `/newbot` se ainda não tiver)
