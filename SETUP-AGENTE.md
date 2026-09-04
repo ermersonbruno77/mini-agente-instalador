@@ -173,7 +173,7 @@ Esse repo e a versao publica/sanitizada. Antes de qualquer ETAPA tecnica, voce, 
 > **Caminho curto (recomendado pra este fork, com `.claude/agents/` ja pronto):** o `CLAUDE.md`,
 > os 4 arquivos de agente e o `tools/` deste repo so usam `{{AGENTE_NAME}}`,
 > `{{AGENTE_NAME_LOWERCASE}}`, `{{AGENTE_NAME_UPPER}}` (nome de variavel de ambiente, ex:
-> `PG_PASSWORD_TMB`) e `{{DONO}}`. Os outros placeholders da tabela abaixo so aparecem em `SETUP-AGENTE.md`,
+> `PG_PASSWORD_NEXUS`) e `{{DONO}}`. Os outros placeholders da tabela abaixo so aparecem em `SETUP-AGENTE.md`,
 > `README.md`, `bootstrap.sh` e `.env.example` (mecanica de instalacao, nao o comportamento do
 > agente) e boa parte e opcional ou nem se aplica a uma instalacao de time. Perguntas realmente
 > obrigatorias pra esse fork: **nome do agente, nome do admin/Chefe, IP+usuario+senha da VPS,
