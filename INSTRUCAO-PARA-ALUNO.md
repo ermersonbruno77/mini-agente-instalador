@@ -59,8 +59,8 @@ Quero instalar meu agente autonomo Claude + Telegram numa VPS Ubuntu.
 
 Acessa o repositorio publico https://github.com/ermersonbruno77/mini-agente-instalador 
 e segue o passo a passo de SETUP-AGENTE.md. Esse fork ja vem com CLAUDE.md e 4 subagentes
-fixos prontos em .claude/agents/ (Paulo, Jonathan, Rafael e Juliana - nao crie nenhum agente
-novo, o repo tem uma trava pra isso de proposito).
+fixos prontos em .claude/agents/ (Paulo, Jonathan, Rafael e Juliana) - nao crie nenhum agente
+novo, use so esses 4.
 
 Vou te dar as informacoes conforme voce pedir:
 - IP, usuario e senha da VPS
